@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apple</title>
+    <style>
+        /* CSS Sıfırlama ve Temel Ayarlar */
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            /* Apple'ın varsayılan font sistemini çağırıyoruz */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+        }
+        
+        body { 
+            background-color: #f5f5f7; 
+            color: #1d1d1f; 
+        }
+        
+        a { 
+            text-decoration: none; 
+            color: inherit; 
+        }
+
+        /* Üst Menü (Navbar) - Bulanık Efektli */
+        nav { 
+            background-color: rgba(0, 0, 0, 0.8); 
+            backdrop-filter: blur(10px); /* Arka planı bulanıklaştırır */
+            -webkit-backdrop-filter: blur(10px);
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 100; 
+            height: 44px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+        }
+        
+        .nav-links { 
+            display: flex; 
+            gap: 35px; 
+            list-style: none; 
+            color: #f5f5f7; 
+            font-size: 12px; 
+            font-weight: 400; 
+            letter-spacing: -0.01em; 
+        }
+        
+        .nav-links li {
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-links li:hover { 
+            opacity: 1; 
+            cursor: pointer; 
+        }
+
+        /* Ana Ürün Alanı (Koyu Tema) */
+        .hero-dark { 
+            background-color: #000; 
+            color: #f5f5f7; 
+            text-align: center; 
+            padding-top: 120px; 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            overflow: hidden;
+        }
+        
+        .hero-dark h1 { 
+            font-size: 56px; 
+            font-weight: 600; 
+            letter-spacing: -0.005em; 
+            margin-bottom: 5px; 
+        }
+        
+        .hero-dark h2 { 
+            font-size: 28px; 
+            font-weight: 400; 
+            margin-bottom: 15px; 
+        }
+        
+        /* Butonlar ve Linkler */
+        .links { 
+            display: flex; 
+            gap: 20px; 
+            font-size: 17px; 
+            margin-top: 15px;
+            align-items: center;
+        }
+        
+        .links a.btn { 
+            background-color: #0071e3; 
+            color: white; 
+            padding: 10px 20px; 
+            border-radius: 20px; 
+            font-size: 15px; 
+            transition: background-color 0.3s;
+        }
+        
+        .links a.btn:hover {
+            background-color: #0077ed;
+        }
+
+        .links a.link { 
+            color: #2997ff; 
+            font-size: 15px;
+        }
+        
+        .links a.link:hover { 
+            text-decoration: underline; 
+        }
+
+        /* Ürün Görseli Yer Tutucu */
+        .product-image-placeholder { 
+            margin-top: 50px; 
+            width: 80%; 
+            max-width: 800px; 
+            height: 500px; 
+            background: linear-gradient(180deg, #2a2a2a 0%, #000 100%); 
+            border-radius: 30px 30px 0 0; 
+            box-shadow: 0 -10px 40px rgba(255,255,255,0.05);
+        }
+
+        /* İkinci Ürün Alanı (Açık Tema) */
+        .hero-light { 
+            background-color: #f5f5f7; 
+            color: #1d1d1f; 
+            text-align: center; 
+            padding-top: 80px; 
+            height: 80vh; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
+        .hero-light h1 { 
+            font-size: 56px; 
+            font-weight: 600; 
+        }
+        
+        .hero-light h2 { 
+            font-size: 28px; 
+            font-weight: 400; 
+            margin-bottom: 15px; 
+        }
+
+        /* Alt Izgara (Grid) Düzeni */
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 15px; 
+            padding: 15px; 
+            background-color: #fff;
+        }
+        
+        .grid-item { 
+            background-color: #f5f5f7; 
+            height: 580px; 
+            text-align: center; 
+            padding-top: 50px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            border-radius: 20px;
+        }
+        
+        .grid-item.dark { 
+            background-color: #000; 
+            color: #f5f5f7; 
+        }
+
+        .grid-item h2 {
+            font-size: 40px;
+            font-weight: 600;
+        }
+
+        .grid-item p {
+            font-size: 20px;
+            margin-top: 5px;
+        }
+
+        /* MacBook kısmı için resim ayarı */
+.hero-image {
+    /* 1. Genişlik Sınırı: Ekrandan taşmasını engelle */
+    max-width: 85%;
+    
+    /* 2. Yükseklik Sınırı: En önemli kısım! hero-light 80vh yüksekliğinde. 
+       Resmin ekran yüksekliğinin yarısından (50vh) büyük olmasını engelliyoruz. */
+    max-height: 50vh; 
+    
+    /* 3. Orantı: Resim ezilmesin veya büzülmesin */
+    object-fit: contain;
+    
+    /* 4. Konumlandırma: Üstündeki butonlarla arasına boşluk bırak */
+    margin-top: 50px; 
+}
+    </style>
+</head>
+<body>
+
+    <!-- Üst Menü -->
+    <nav>
+        <ul class="nav-links">
+            <li></li> <!-- Apple Logosu yerine karakter -->
+            <li>Store</li>
+            <li>Mac</li>
+            <li>iPad</li>
+            <li>iPhone</li>
+            <li>Watch</li>
+            <li>AirPods</li>
+            <li>Destek</li>
+        </ul>
+    </nav>
+
+    <!-- Ana Kısım: iPhone 15 Pro -->
+    <section class="hero-dark">
+        <h1>iPhone 17 Pro Max</h1>
+        <h2>Titanyum. Çok güçlü. Çok hafif. Çok Pro.</h2>
+        <div class="links">
+            <a href="#" class="btn">Satın Alın</a>
+            <a href="#" class="link">Daha fazla bilgi edin ></a>
+        </div>
+        <!-- Buraya ileride img etiketiyle PNG formatında bir telefon resmi ekleyebilirsin -->
+        <div class="product-image-placeholder"></div>
+        <img src="iphone17promax.jpg">
+    </section>
+
+    <!-- Orta Kısım: MacBook -->
+<!-- Orta Kısım: MacBook -->
+<section class="hero-light">
+    <h1>MacBook Air</h1>
+    <h2>M3 çipin gücüyle.</h2>
+    <div class="links">
+        <a href="#" class="btn">Satın Alın</a>
+        <a href="#" class="link">Daha fazla bilgi edin ></a>
+    </div>
+
+    <!-- MacBook Fotoğrafını buraya ekliyoruz! -->
+    <!-- 'MACBOOK_RESIM_ADRESI' kısmını kendi resminle değiştir -->
+    <img src="macbookair.jpg" alt="MacBook Air" class="hero-image">
+
+</section>
+
+    <!-- Alt Kısım: Yan Yana Kartlar -->
+<!-- index.html Dosyasındaki bu kısmı bul ve güncelle -->
+
+<div class="grid-item dark">
+    <h2>WATCH</h2>
+    <p style="color: #e63946; font-size: 14px; font-weight: bold; letter-spacing: 2px;">SERIES 9</p>
+    <p>Şimdiye kadarki en akıllı saatimiz.</p>
+    <div class="links" style="margin-top: 15px;">
+        <a href="#" class="btn">Satın Alın</a>
+    </div>
+
+    <!-- Fotoğrafı buraya ekliyoruz! -->
+    <!-- 'RESIM_ADRESINI_BURAYA_YAZ' kısmını kendi resminle değiştir -->
+    <img src="applewatch.png" alt="Apple Watch Series 9" class="grid-image">
+
+</div> <!-- .grid-item dark kapanış etiketi -->
+        </div>
+        <div class="grid-item">
+            <h2>AirPods Pro</h2>
+            <p>Adaptif Ses. Şimdi duyacaksınız.</p>
+            <div class="links" style="margin-top: 15px;">
+                <a href="#" class="btn">Satın Alın</a>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>
