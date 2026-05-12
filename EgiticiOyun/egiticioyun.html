@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eğitici Matematik Oyunu</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f8ff, #e6e6fa);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .game-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+        }
+
+        h1 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 2.2em;
+        }
+
+        p.subtitle {
+            color: #7f8c8d;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .score-board {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #4ecdc4;
+            background-color: #f7fefd;
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 20px;
+            border: 2px solid #e0f7f5;
+        }
+
+        .question {
+            font-size: 2.5em;
+            margin: 20px 0;
+            font-weight: bold;
+            color: #2d3436;
+        }
+
+        input[type="number"] {
+            padding: 15px;
+            font-size: 1.5em;
+            width: 70%;
+            border: 3px solid #dfe6e9;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: #4ecdc4;
+        }
+
+        /* Input oklarını gizlemek için */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.1s;
+            width: 70%;
+        }
+
+        button:hover {
+            background-color: #ee5253;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .message {
+            margin-top: 25px;
+            font-weight: bold;
+            font-size: 1.1em;
+            min-height: 25px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        <h1>Matematik Dehası</h1>
+        <p class="subtitle">Doğru cevaplar +10 puan, yanlış cevaplar -5 puan!</p>
+        
+        <div class="score-board">Puan: <span id="score">0</span></div>
+        
+        <div class="question" id="question">Soru Yükleniyor...</div>
+        
+        <input type="number" id="answer" placeholder="Cevap" autocomplete="off" autofocus>
+        <br>
+        <button onclick="checkAnswer()">Cevapla</button>
+        
+        <div class="message" id="message"></div>
+    </div>
+
+    <script>
+        let score = 0;
+        let correctAnswer = 0;
+
+        function generateQuestion() {
+            // 1 ile 10 arasında rastgele sayılar oluşturuyoruz
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            
+            // İşlem türünü belirliyoruz (Toplama, Çıkarma, Çarpma)
+            const operators = ['+', '-', 'x'];
+            const operator = operators[Math.floor(Math.random() * operators.length)];
+
+            let questionText = '';
+
+            // Çıkarma işleminde eksi sonuç çıkmaması için büyük sayıdan küçüğü çıkarıyoruz
+            if (operator === '-' && num1 < num2) {
+                questionText = `${num2} - ${num1}`;
+                correctAnswer = num2 - num1;
+            } else {
+                questionText = `${num1} ${operator} ${num2}`;
+                if (operator === '+') correctAnswer = num1 + num2;
+                if (operator === '-') correctAnswer = num1 - num2;
+                if (operator === 'x') correctAnswer = num1 * num2;
+            }
+
+            // Soruyu ekrana yazdır ve girdi alanını temizle
+            document.getElementById('question').textContent = questionText + ' = ?';
+            const answerInput = document.getElementById('answer');
+            answerInput.value = '';
+            answerInput.focus();
+        }
+
+        function checkAnswer() {
+            const answerInput = document.getElementById('answer');
+            const userAnswer = parseInt(answerInput.value);
+            const messageEl = document.getElementById('message');
+
+            // Kullanıcı boş bırakırsa veya sayı girmezse uyar
+            if (isNaN(userAnswer)) {
+                messageEl.textContent = "Lütfen bir sayı girin!";
+                messageEl.style.color = "#ff9f43";
+                return;
+            }
+
+            // Cevabı kontrol et
+            if (userAnswer === correctAnswer) {
+                score += 10;
+                messageEl.textContent = "🎉 Tebrikler! Doğru cevap.";
+                messageEl.style.color = "#1dd1a1";
+            } else {
+                score -= 5;
+                messageEl.textContent = `❌ Yanlış. Doğru cevap ${correctAnswer} olacaktı.`;
+                messageEl.style.color = "#ee5253";
+            }
+
+            // Puanı güncelle ve yeni soru sor
+            document.getElementById('score').textContent = score;
+            generateQuestion();
+        }
+
+        // Kullanıcı 'Enter' tuşuna bastığında da cevabı kontrol et
+        document.getElementById('answer').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+
+        // Oyun başladığında ilk soruyu üret
+        window.onload = generateQuestion;
+    </script>
+
+</body>
+</html>
